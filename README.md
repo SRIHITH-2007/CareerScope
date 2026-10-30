@@ -1,7 +1,9 @@
 # CareerScope 📊
 ### Indian Job Market & Salary Intelligence Platform
 
-CareerScope is a Python-based data analytics dashboard for exploring Indian job-posting salary records by role family, job title, seniority, city and posting month.
+🚀 **Live Demo:** [Open CareerScope Dashboard](https://careerscope-whwptuqpfwr5jouzm3cs4e.streamlit.app/)
+
+A data analytics platform that explores Indian job-market salary records, job roles, seniority levels, company information and city-wise employment trends.
 
 ## Features
 - KPI overview: filtered posting-record count, average salary, median salary and cities represented.
