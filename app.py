@@ -139,8 +139,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📈 Salary insights", "🏢 Role demand", "🌍 Location insights", "📋 Explore postings"
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📈 Salary insights", "🏢 Role demand", "🌍 Location insights",
+    "📋 Explore postings", "🎯 Career intelligence"
 ])
 
 with tab1:
@@ -233,6 +234,110 @@ with tab4:
     st.download_button("⬇️ Download filtered records (CSV)",
                        filtered.to_csv(index=False).encode("utf-8"),
                        "careerscope_filtered_records.csv", "text/csv")
+
+
+with tab5:
+    st.subheader("Explore a career path")
+    st.write(
+        "Choose a role family, city and seniority level to examine salary benchmarks "
+        "and compare the same role across locations."
+    )
+    st.caption(
+        "This analysis uses the full loaded dataset, independently of the sidebar filters. "
+        "It describes historical records and is not an individual salary prediction."
+    )
+
+    ci1, ci2, ci3 = st.columns(3)
+    ci_roles = sorted(data["role_family"].dropna().unique().tolist())
+    ci_cities = sorted(data["city"].dropna().unique().tolist())
+    ci_seniorities = sorted(data["seniority"].dropna().unique().tolist())
+
+    with ci1:
+        target_role = st.selectbox("Target role family", ci_roles, key="ci_role")
+    with ci2:
+        target_city = st.selectbox("Preferred city", ci_cities, key="ci_city")
+    with ci3:
+        target_seniority = st.selectbox("Experience / seniority level", ci_seniorities, key="ci_seniority")
+
+    role_data = data[
+        (data["role_family"] == target_role)
+        & (data["seniority"] == target_seniority)
+    ].copy()
+    selected_market = role_data[role_data["city"] == target_city].copy()
+
+    st.markdown("#### Salary benchmark for your selection")
+    if selected_market.empty:
+        st.info(
+            "There are no records for this exact role, city and seniority combination. "
+            "Try another city or seniority level."
+        )
+    else:
+        count = len(selected_market)
+        median_salary = selected_market["salary_mid_inr"].median()
+        average_salary = selected_market["salary_mid_inr"].mean()
+        minimum_salary = selected_market["salary_min_inr"].median()
+        maximum_salary = selected_market["salary_max_inr"].median()
+
+        k1, k2, k3, k4 = st.columns(4)
+        k1.metric("Matching records", f"{count:,}")
+        k2.metric("Median salary", inr_lpa(median_salary))
+        k3.metric("Average salary", inr_lpa(average_salary))
+        k4.metric("Median listed range", f"{inr_lpa(minimum_salary)} – {inr_lpa(maximum_salary)}")
+
+        if count < 10:
+            st.warning(
+                "This combination has fewer than 10 records. Treat the salary benchmark "
+                "as indicative rather than representative."
+            )
+
+    st.markdown("#### Compare this role across cities")
+    if role_data.empty:
+        st.info("No records are available for this role family and seniority level.")
+    else:
+        city_comparison = role_data.groupby("city", as_index=False).agg(
+            postings=("posting_id", "count"),
+            median_salary_inr=("salary_mid_inr", "median")
+        )
+        city_comparison = city_comparison.sort_values(
+            ["median_salary_inr", "postings"], ascending=[False, False]
+        )
+        chart_data = city_comparison.head(12).copy()
+        if target_city not in chart_data["city"].values:
+            selected_city_row = city_comparison[city_comparison["city"] == target_city]
+            if not selected_city_row.empty:
+                chart_data = pd.concat([chart_data, selected_city_row], ignore_index=True)
+        fig = px.bar(
+            chart_data.sort_values("median_salary_inr"),
+            x="median_salary_inr",
+            y="city",
+            orientation="h",
+            color="median_salary_inr",
+            color_continuous_scale="Blues",
+            hover_data={"postings": True, "median_salary_inr": ":,.0f"},
+            title=f"Median salary by city · {target_role} · {target_seniority}",
+            labels={
+                "median_salary_inr": "Median annual salary (INR)",
+                "city": "City",
+                "postings": "Records"
+            }
+        )
+        fig.update_layout(coloraxis_showscale=False)
+        st.plotly_chart(fig, use_container_width=True)
+
+        city_comparison["median_salary_lpa"] = (
+            city_comparison["median_salary_inr"] / 100000
+        ).round(2)
+        st.dataframe(
+            city_comparison[["city", "postings", "median_salary_lpa"]].rename(
+                columns={
+                    "city": "City",
+                    "postings": "Records",
+                    "median_salary_lpa": "Median salary (LPA)"
+                }
+            ),
+            use_container_width=True,
+            hide_index=True
+        )
 
 with st.expander("ℹ️ About CareerScope & methodology"):
     st.markdown("""
