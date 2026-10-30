@@ -15,43 +15,50 @@ DEFAULT_DATA = ROOT / "data" / "india_salary_benchmarks_2026_sample.csv"
 
 st.markdown("""
 <style>
-    .stApp, [data-testid="stAppViewContainer"] {background:#f7f9fc !important;}
-    .main {background:#f7f9fc;}
-    [data-testid="stMain"] h1, [data-testid="stMain"] h2,
-    [data-testid="stMain"] h3, [data-testid="stMain"] h4,
-    [data-testid="stMain"] p, [data-testid="stMain"] label {
-        color:#172554;
-    }
-    .hero h1, .hero p {
-        color: #ffffff !important;
-    }
-    [data-testid="stMain"] [data-testid="stTabs"] button,
-    [data-testid="stMain"] [data-testid="stTabs"] button p {
-        color:#334155 !important; font-weight:650 !important;
-    }
-    [data-testid="stMain"] [data-testid="stTabs"] button[aria-selected="true"],
-    [data-testid="stMain"] [data-testid="stTabs"] button[aria-selected="true"] p {
-        color:#dc2626 !important;
-    }
-    .block-container {padding-top:1.5rem; padding-bottom:2rem;}
-    div[data-testid="stMetric"] {
-        background:#fff !important; border:1px solid #dbe4f0 !important;
-        padding:16px; border-radius:12px; box-shadow:0 3px 12px rgba(20,35,60,.07);
-    }
-    div[data-testid="stMetric"] label,
-    div[data-testid="stMetric"] label *,
-    div[data-testid="stMetricValue"],
-    div[data-testid="stMetricValue"] * {color:#172554 !important;}
-    div[data-testid="stMetric"] label {font-weight:600 !important;}
-    div[data-testid="stMetricValue"] {font-weight:750 !important;}
-    .hero {padding:24px 26px; border-radius:16px; color:white;
-           background:linear-gradient(115deg,#172554,#2563eb); margin-bottom:18px;}
-    .hero h1 {margin:0; font-size:2.1rem;}
-    .hero p {margin:7px 0 0 0; opacity:.95;}
-    .note {padding:12px 15px; border-radius:10px; background:#eef4ff;
-           border:1px solid #d8e5ff; color:#1e3a8a; margin:8px 0 16px 0;}
-    .small-note {color:#64748b; font-size:.85rem;}
-    div[data-testid="stTabs"] button {font-weight:650;}
+:root { --ink:#14233f; --muted:#71809a; --line:#e5eaf2; --blue:#315eea; }
+.stApp,[data-testid="stAppViewContainer"] {background:#f4f7fc !important;}
+[data-testid="stMain"] {background:transparent;}
+.block-container {max-width:1440px;padding:1.3rem 2.5rem 3rem;}
+[data-testid="stMain"] h1,[data-testid="stMain"] h2,[data-testid="stMain"] h3,
+[data-testid="stMain"] p,[data-testid="stMain"] label {color:var(--ink);}
+
+/* Brand masthead and editorial welcome */
+.masthead {display:flex;align-items:center;gap:13px;padding:5px 0 23px;border-bottom:1px solid #e1e7f0;margin-bottom:27px;}
+.brand-mark {width:43px;height:43px;display:flex;align-items:center;justify-content:center;border-radius:13px;background:#172b50;color:#fff;font-weight:900;}
+.brand-copy .eyebrow,.welcome .eyebrow {font-size:.68rem;font-weight:850;letter-spacing:1.8px;color:#7a8aa4;}
+.brand-title {color:#14233f;font-size:1.35rem;font-weight:850;letter-spacing:-.7px;}
+.brand-title span {color:#3767ed;}
+.masthead-tag {margin-left:auto;color:#62738e;font-size:.68rem;font-weight:800;letter-spacing:1.2px;border:1px solid #dce4ef;border-radius:30px;padding:8px 13px;background:#fff;}
+.welcome {display:flex;align-items:center;justify-content:space-between;gap:24px;background:#172b50;border-radius:20px;padding:27px 32px;margin-bottom:22px;box-shadow:0 12px 28px rgba(20,35,63,.10);}
+.welcome .eyebrow {color:#9eb8f6;}
+.welcome h1 {color:#fff !important;font-size:2rem;letter-spacing:-1px;margin:8px 0 7px;}
+.welcome h1 span {color:#9bb7ff;}
+.welcome p {color:#d8e2f4 !important;margin:0;max-width:690px;font-size:.94rem;}
+.welcome-aside {min-width:180px;padding:15px 18px;border-left:1px solid rgba(255,255,255,.2);}
+.aside-label {color:#a9bce0;font-size:.65rem;letter-spacing:1.5px;font-weight:800;}
+.aside-value {color:#fff;font-size:1.45rem;font-weight:850;margin-top:5px;}
+.aside-sub {color:#c2d0e8;font-size:.75rem;}
+
+/* Filter workspace, snapshot cards, and section navigation */
+div[data-testid="stExpander"] {background:#fff;border:1px solid #e1e8f2;border-radius:14px;box-shadow:0 4px 14px rgba(20,35,63,.035);margin-bottom:23px;}
+div[data-testid="stExpander"] summary {color:#1c3154;font-weight:800;}
+.snapshot-head {margin:23px 0 12px;}
+.snapshot-head .eyebrow {color:#8190a7;}
+.snapshot-head h2 {font-size:1.35rem;margin:4px 0 0;letter-spacing:-.4px;}
+div[data-testid="stMetric"] {background:#fff !important;border:1px solid #e3eaf3 !important;padding:17px 19px;border-radius:15px;box-shadow:0 5px 18px rgba(20,35,63,.04);min-height:105px;}
+div[data-testid="stMetric"] label,div[data-testid="stMetric"] label *,div[data-testid="stMetricValue"],div[data-testid="stMetricValue"] * {color:#172b50 !important;}
+div[data-testid="stMetric"] label {color:#77869e !important;font-size:.78rem !important;font-weight:700 !important;}
+div[data-testid="stMetricValue"] {font-size:1.7rem !important;font-weight:850 !important;letter-spacing:-.7px;}
+div[role="radiogroup"] {gap:9px;flex-wrap:wrap;}
+div[role="radiogroup"] label {background:#fff;border:1px solid #dfe6f0;border-radius:10px;padding:9px 15px;font-weight:750;color:#64748b !important;}
+div[role="radiogroup"] label:has(input:checked) {background:#172b50;border-color:#172b50;}
+div[role="radiogroup"] label:has(input:checked) * {color:#fff !important;}
+[data-testid="stPlotlyChart"],[data-testid="stDataFrame"] {background:#fff;border:1px solid #e5eaf2;border-radius:15px;padding:8px;box-shadow:0 4px 16px rgba(20,35,63,.035);}
+.section-label {color:#7c8ba2;font-size:.67rem;font-weight:850;letter-spacing:1.7px;text-transform:uppercase;margin:5px 0 10px;}
+.note {padding:12px 15px;border-radius:11px;background:#edf3ff;border:1px solid #dce7ff;color:#34517e;margin:15px 0 20px;font-size:.83rem;}
+.small-note {color:#78879d;font-size:.8rem;}
+.stButton>button,.stDownloadButton>button {border-radius:9px;font-weight:700;}
+@media(max-width:850px){.block-container{padding:1rem 1rem 2rem}.welcome{align-items:flex-start;flex-direction:column;padding:22px}.welcome h1{font-size:1.55rem}.welcome-aside{border-left:0;border-top:1px solid rgba(255,255,255,.2);padding:12px 0 0}.masthead-tag{display:none}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -85,14 +92,30 @@ def inr_lpa(value):
     return f"₹{value / 100000:.2f} LPA"
 
 st.markdown("""
-<div class="hero">
-  <h1>📊 CareerScope</h1>
-  <p>Indian Job Market & Salary Intelligence · Explore roles, compensation, seniority and hiring locations</p>
+<div class="masthead">
+  <div class="brand-mark">CS</div>
+  <div class="brand-copy">
+    <div class="eyebrow">INDIA · JOB MARKET ANALYTICS</div>
+    <div class="brand-title">CareerScope<span>.</span></div>
+  </div>
+  <div class="masthead-tag">CAREER INTELLIGENCE PLATFORM</div>
+</div>
+<div class="welcome">
+  <div>
+    <div class="eyebrow">YOUR CAREER, BACKED BY DATA</div>
+    <h1>Make your next move <span>with clarity.</span></h1>
+    <p>Explore salary benchmarks, understand role demand and compare locations across the Indian job market.</p>
+  </div>
+  <div class="welcome-aside">
+    <div class="aside-label">DATA COVERAGE</div>
+    <div class="aside-value">2024 — 2026</div>
+    <div class="aside-sub">Historical salary records</div>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
-with st.sidebar:
-    st.header("⚙️ Data & Filters")
+with st.expander("⚙️ FILTER YOUR MARKET DATA", expanded=False):
+    st.markdown("Choose the dimensions you want to analyze. All dashboard sections use these filters.")
     uploaded = st.file_uploader("Upload compatible job dataset (CSV)", type=["csv"])
     try:
         data = load_data(uploaded.getvalue() if uploaded else None)
@@ -127,7 +150,7 @@ if filtered.empty:
     st.warning("No records match these filters. Adjust the selections in the sidebar.")
     st.stop()
 
-st.subheader("Market overview")
+st.markdown("<div class='snapshot-head'><div class='eyebrow'>LIVE FILTERED VIEW</div><h2>Market overview</h2></div>", unsafe_allow_html=True)
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Job postings", f"{len(filtered):,}")
 m2.metric("Average salary", inr_lpa(filtered["salary_mid_inr"].mean()))
@@ -139,12 +162,47 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📈 Salary insights", "🏢 Role demand", "🌍 Location insights",
-    "📋 Explore postings", "🎯 Career intelligence"
-])
+active_view = st.radio(
+    "Explore dashboard",
+    ["📊 Overview", "💰 Salary insights", "🏢 Role demand", "🌍 Location insights",
+     "📋 Explore postings", "🎯 Career intelligence"],
+    horizontal=True, label_visibility="collapsed", key="dashboard_view"
+)
 
-with tab1:
+
+if active_view == "📊 Overview":
+    st.markdown("<div class='section-label'>AT A GLANCE · MARKET SIGNALS</div>", unsafe_allow_html=True)
+    left, right = st.columns([1.35, 1], gap="large")
+    with left:
+        role_counts = filtered["role_family"].value_counts().head(8).rename_axis("role_family").reset_index(name="postings")
+        fig = px.bar(role_counts.sort_values("postings"), x="postings", y="role_family",
+                     orientation="h", title="Where job records are concentrated",
+                     labels={"postings":"Records", "role_family":"Role family"})
+        fig.update_layout(margin=dict(l=10,r=15,t=55,b=10), height=340)
+        st.plotly_chart(fig, use_container_width=True)
+    with right:
+        city_counts = filtered["city"].value_counts().head(8).rename_axis("city").reset_index(name="postings")
+        fig = px.pie(city_counts, names="city", values="postings", hole=.62,
+                     title="Records across leading cities")
+        fig.update_layout(margin=dict(l=10,r=10,t=55,b=10), height=340,
+                          legend=dict(orientation="h", y=-.12))
+        st.plotly_chart(fig, use_container_width=True)
+    trend = filtered.groupby("posted_month").size().reset_index(name="records").sort_values("posted_month")
+    fig = px.area(trend, x="posted_month", y="records", title="Posting activity over time",
+                  labels={"posted_month":"Month", "records":"Records"})
+    fig.update_layout(height=300, margin=dict(l=10,r=15,t=55,b=10))
+    st.plotly_chart(fig, use_container_width=True)
+    st.markdown("#### Highest median salary role families")
+    role_salary = filtered.groupby("role_family", as_index=False).agg(
+        median_salary=("salary_mid_inr","median"), records=("posting_id","count")
+    ).sort_values("median_salary", ascending=False).head(6)
+    role_salary["Median salary"] = role_salary["median_salary"].map(inr_lpa)
+    st.dataframe(role_salary[["role_family","records","Median salary"]].rename(
+        columns={"role_family":"Role family","records":"Records"}
+    ), use_container_width=True, hide_index=True)
+
+if active_view == "💰 Salary insights":
+    st.markdown("<div class='section-label'>COMPENSATION & TRENDS</div>", unsafe_allow_html=True)
     left, right = st.columns(2)
     with left:
         by_role = filtered.groupby("role_family", as_index=False)["salary_mid_inr"].median()
@@ -171,7 +229,8 @@ with tab1:
     st.plotly_chart(fig, use_container_width=True)
     st.caption("Salary charts use salary_mid_inr, the midpoint between the listed minimum and maximum salary.")
 
-with tab2:
+elif active_view == "🏢 Role demand":
+    st.markdown("<div class='section-label'>WHAT THE DATA SAYS ABOUT ROLES</div>", unsafe_allow_html=True)
     a, b = st.columns(2)
     with a:
         role_counts = filtered["role_family"].value_counts().rename_axis("role_family").reset_index(name="postings")
@@ -196,7 +255,8 @@ with tab2:
     st.dataframe(summary[["role_family","postings","median_salary_lpa","average_salary_lpa"]],
                  use_container_width=True, hide_index=True)
 
-with tab3:
+elif active_view == "🌍 Location insights":
+    st.markdown("<div class='section-label'>WHERE OPPORTUNITIES ARE RECORDED</div>", unsafe_allow_html=True)
     a, b = st.columns(2)
     with a:
         city_counts = filtered["city"].value_counts().head(15).rename_axis("city").reset_index(name="postings")
@@ -221,7 +281,8 @@ with tab3:
     city_table["median_salary_lpa"] = (city_table["median_salary_inr"] / 100000).round(2)
     st.dataframe(city_table[["city","postings","median_salary_lpa"]], use_container_width=True, hide_index=True)
 
-with tab4:
+elif active_view == "📋 Explore postings":
+    st.markdown("<div class='section-label'>SEARCH THE DATASET</div>", unsafe_allow_html=True)
     st.caption("The source is a historical salary benchmark sample, not necessarily a currently open vacancy list.")
     cols = ["posted_month","job_title","role_family","company","city","seniority","experience_band",
             "salary_min_inr","salary_max_inr","salary_mid_inr"]
@@ -236,7 +297,8 @@ with tab4:
                        "careerscope_filtered_records.csv", "text/csv")
 
 
-with tab5:
+elif active_view == "🎯 Career intelligence":
+    st.markdown("<div class='section-label'>PLAN YOUR NEXT CAREER MOVE</div>", unsafe_allow_html=True)
     st.subheader("Explore a career path")
     st.write(
         "Choose a role family, city and seniority level to examine salary benchmarks "
